@@ -5,6 +5,8 @@ import tn.esprit.autoloc.repository.AgenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class AgenceService implements IAgenceService {
-
+    private final AgenceRepository agenceRepository;
 }

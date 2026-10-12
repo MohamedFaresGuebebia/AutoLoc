@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class ClientService implements IClientService{
 
-    ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public List<Client> retrieveAllClients() {
