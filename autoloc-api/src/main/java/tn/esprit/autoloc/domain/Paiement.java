@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.ArrayList;
+
 
 @Entity
 @Table(name = "paiement")
