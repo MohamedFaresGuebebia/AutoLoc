@@ -1,36 +1,42 @@
 package tn.esprit.autoloc.service;
 
-import tn.esprit.autoloc.domain.Client;
-import tn.esprit.autoloc.repository.ClientRepository;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import tn.esprit.autoloc.domain.Client;
+import tn.esprit.autoloc.mapper.ClientMapper;
+import tn.esprit.autoloc.repository.ClientRepository;
+import tn.esprit.autoloc.web.dto.ClientDTO;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class ClientService implements IClientService{
+@AllArgsConstructor
+public class ClientService implements IClientService {
 
     private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
 
     @Override
-    public List<Client> retrieveAllClients() {
-        return clientRepository.findAll();
+    public List<ClientDTO> retrieveAllClients() {
+        return clientRepository.findAll().stream().map(clientMapper::toDTO).toList();
     }
 
     @Override
-    public Client addClient(Client c) {
-        return clientRepository.save(c);
+    public ClientDTO addClient(ClientDTO dto) {
+        return clientMapper.toDTO(clientRepository.save(clientMapper.toEntity(dto)));
     }
 
     @Override
-    public Client updateClient(Client c) {
-        return clientRepository.save(c);
+    public ClientDTO updateClient(ClientDTO dto) {
+        Client client = findOrThrow(dto.idClient());
+        clientMapper.updateEntity(client, dto);
+        return clientMapper.toDTO(clientRepository.save(client));
     }
 
     @Override
-    public Client retrieveClient(Long idClient) {
-        return clientRepository.findById(idClient).orElse(null);
+    public ClientDTO retrieveClient(Long idClient) {
+        return clientMapper.toDTO(findOrThrow(idClient));
     }
 
     @Override
@@ -39,7 +45,13 @@ public class ClientService implements IClientService{
     }
 
     @Override
-    public List<Client> addClients(List<Client> clients) {
-        return clientRepository.saveAll(clients);
+    public List<ClientDTO> addClients(List<ClientDTO> clients) {
+        List<Client> entities = clients.stream().map(clientMapper::toEntity).toList();
+        return clientRepository.saveAll(entities).stream().map(clientMapper::toDTO).toList();
+    }
+
+    private Client findOrThrow(Long idClient) {
+        return clientRepository.findById(idClient)
+                .orElseThrow(() -> new EntityNotFoundException("Client introuvable : " + idClient));
     }
 }

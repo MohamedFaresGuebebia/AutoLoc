@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.autoloc.domain.Client;
+import tn.esprit.autoloc.web.dto.ClientDTO;
 import tn.esprit.autoloc.service.IClientService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ClientController {
             description = "Retourne tous les clients enregistrés en base.",
             responses = @ApiResponse(responseCode = "200", description = "Liste retournée avec succès"))
     @GetMapping("/retrieve-all-clients")
-    public List<Client> retrieveAllClients() {
+    public List<ClientDTO> retrieveAllClients() {
         return clientService.retrieveAllClients();
     }
 
@@ -29,7 +30,7 @@ public class ClientController {
             responses = @ApiResponse(responseCode = "200",
                     description = "Client retourné (réponse vide si l'identifiant n'existe pas)"))
     @GetMapping("/retrieve-client/{idClient}")
-    public Client retrieveClient(@PathVariable("idClient") Long idClient) {
+    public ClientDTO retrieveClient(@PathVariable("idClient") Long idClient) {
         return clientService.retrieveClient(idClient);
     }
 
@@ -40,7 +41,7 @@ public class ClientController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-client")
-    public Client addClient(@RequestBody Client client) {
+    public ClientDTO addClient(@Valid @RequestBody ClientDTO client) {
         return clientService.addClient(client);
     }
 
@@ -51,7 +52,7 @@ public class ClientController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-clients")
-    public List<Client> addClients(@RequestBody List<Client> clients) {
+    public List<ClientDTO> addClients(@Valid @RequestBody List<ClientDTO> clients) {
         return clientService.addClients(clients);
     }
 
@@ -62,7 +63,7 @@ public class ClientController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PutMapping("/update-client")
-    public Client updateClient(@RequestBody Client client) {
+    public ClientDTO updateClient(@Valid @RequestBody ClientDTO client) {
         return clientService.updateClient(client);
     }
 

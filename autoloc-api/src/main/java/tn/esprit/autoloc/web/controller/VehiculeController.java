@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.service.IVehiculeService;
+import tn.esprit.autoloc.web.dto.VehiculeDTO;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class VehiculeController {
             description = "Retourne tous les véhicules enregistrés en base.",
             responses = @ApiResponse(responseCode = "200", description = "Liste retournée avec succès"))
     @GetMapping("/retrieve-all-vehicules")
-    public List<Vehicule> retrieveAllVehicules() {
+    public List<VehiculeDTO> retrieveAllVehicules() {
         return vehiculeService.retrieveAllVehicules();
     }
 
@@ -29,7 +30,7 @@ public class VehiculeController {
             responses = @ApiResponse(responseCode = "200",
                     description = "Véhicule retourné (réponse vide si l'identifiant n'existe pas)"))
     @GetMapping("/retrieve-vehicule/{idVehicule}")
-    public Vehicule retrieveVehicule(@PathVariable("idVehicule") Long idVehicule) {
+    public VehiculeDTO retrieveVehicule(@PathVariable("idVehicule") Long idVehicule) {
         return vehiculeService.retrieveVehicule(idVehicule);
     }
 
@@ -40,7 +41,7 @@ public class VehiculeController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-vehicule")
-    public Vehicule addVehicule(@RequestBody Vehicule vehicule) {
+    public VehiculeDTO addVehicule(@Valid @RequestBody VehiculeDTO vehicule) {
         return vehiculeService.addVehicule(vehicule);
     }
 
@@ -51,7 +52,7 @@ public class VehiculeController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-vehicules")
-    public List<Vehicule> addVehicules(@RequestBody List<Vehicule> vehicules) {
+    public List<VehiculeDTO> addVehicules(@Valid @RequestBody List<VehiculeDTO> vehicules) {
         return vehiculeService.addVehicules(vehicules);
     }
 
@@ -62,7 +63,7 @@ public class VehiculeController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PutMapping("/update-vehicule")
-    public Vehicule updateVehicule(@RequestBody Vehicule vehicule) {
+    public VehiculeDTO updateVehicule(@Valid @RequestBody VehiculeDTO vehicule) {
         return vehiculeService.updateVehicule(vehicule);
     }
 

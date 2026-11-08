@@ -1,9 +1,15 @@
 package tn.esprit.autoloc.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.domain.Agence;
+
+import tn.esprit.autoloc.mapper.AgenceMapper;
 import tn.esprit.autoloc.repository.AgenceRepository;
+import tn.esprit.autoloc.web.dto.AgenceDTO;
+
+
 
 import java.util.List;
 
@@ -12,25 +18,29 @@ import java.util.List;
 public class AgenceService implements IAgenceService {
 
     private final AgenceRepository agenceRepository;
+    private final AgenceMapper agenceMapper;
 
     @Override
-    public List<Agence> retrieveAllAgences() {
-        return agenceRepository.findAll();
+    public List<AgenceDTO> retrieveAllAgences() {
+        return agenceRepository.findAll().stream().map(agenceMapper::toDTO).toList();
     }
 
     @Override
-    public Agence addAgence(Agence a) {
-        return agenceRepository.save(a);
+    public AgenceDTO addAgence(AgenceDTO dto) {
+        return agenceMapper.toDTO(agenceRepository.save(agenceMapper.toEntity(dto)));
     }
 
     @Override
-    public Agence updateAgence(Agence a) {
-        return agenceRepository.save(a);
+    public AgenceDTO updateAgence(AgenceDTO dto) {
+        Agence agence = findOrThrow(dto.idAgence());
+        agenceMapper.updateEntity(agence, dto);
+        return agenceMapper.toDTO(agenceRepository.save(agence));
     }
 
+
     @Override
-    public Agence retrieveAgence(Long idAgence) {
-        return agenceRepository.findById(idAgence).orElse(null);
+    public AgenceDTO retrieveAgence(Long idAgence) {
+        return agenceMapper.toDTO(findOrThrow(idAgence));
     }
 
     @Override
@@ -39,7 +49,13 @@ public class AgenceService implements IAgenceService {
     }
 
     @Override
-    public List<Agence> addAgences(List<Agence> agences) {
-        return agenceRepository.saveAll(agences);
+    public List<AgenceDTO> addAgences(List<AgenceDTO> agences) {
+        List<Agence> entities = agences.stream().map(agenceMapper::toEntity).toList();
+        return agenceRepository.saveAll(entities).stream().map(agenceMapper::toDTO).toList();
+    }
+
+    private Agence findOrThrow(Long idAgence) {
+        return agenceRepository.findById(idAgence)
+                .orElseThrow(() -> new EntityNotFoundException("Agence introuvable : " + idAgence));
     }
 }

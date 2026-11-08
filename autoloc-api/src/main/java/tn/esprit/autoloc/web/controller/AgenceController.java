@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.autoloc.domain.Agence;
 import tn.esprit.autoloc.service.IAgenceService;
+import tn.esprit.autoloc.web.dto.AgenceDTO;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class AgenceController {
             description = "Retourne toutes les agences enregistrées en base.",
             responses = @ApiResponse(responseCode = "200", description = "Liste retournée avec succès"))
     @GetMapping("/retrieve-all-agences")
-    public List<Agence> retrieveAllAgences() {
+    public List<AgenceDTO> retrieveAllAgences() {
         return agenceService.retrieveAllAgences();
     }
 
@@ -29,7 +30,7 @@ public class AgenceController {
             responses = @ApiResponse(responseCode = "200",
                     description = "Agence retournée (réponse vide si l'identifiant n'existe pas)"))
     @GetMapping("/retrieve-agence/{idAgence}")
-    public Agence retrieveAgence(@PathVariable("idAgence") Long idAgence) {
+    public AgenceDTO retrieveAgence(@PathVariable("idAgence") Long idAgence) {
         return agenceService.retrieveAgence(idAgence);
     }
 
@@ -40,7 +41,7 @@ public class AgenceController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-agence")
-    public Agence addAgence(@RequestBody Agence agence) {
+    public AgenceDTO addAgence(@Valid @RequestBody AgenceDTO agence) {
         return agenceService.addAgence(agence);
     }
 
@@ -51,7 +52,7 @@ public class AgenceController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PostMapping("/add-agences")
-    public List<Agence> addAgences(@RequestBody List<Agence> agences) {
+    public List<AgenceDTO> addAgences(@Valid @RequestBody List<AgenceDTO> agences) {
         return agenceService.addAgences(agences);
     }
 
@@ -62,7 +63,7 @@ public class AgenceController {
                     @ApiResponse(responseCode = "400", description = "Corps de la requête invalide")
             })
     @PutMapping("/update-agence")
-    public Agence updateAgence(@RequestBody Agence agence) {
+    public AgenceDTO updateAgence(@Valid @RequestBody AgenceDTO agence) {
         return agenceService.updateAgence(agence);
     }
 
