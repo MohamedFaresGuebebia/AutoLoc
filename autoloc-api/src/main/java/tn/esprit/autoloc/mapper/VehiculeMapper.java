@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.repository.AgenceRepository;
 import tn.esprit.autoloc.web.dto.VehiculeDTO;
+import tn.esprit.autoloc.domain.Equipement;
+import tn.esprit.autoloc.domain.Maintenance;
 
 @Component
 @AllArgsConstructor
@@ -22,7 +24,9 @@ public class VehiculeMapper {
                 vehicule.getCategorie(),
                 vehicule.getTarifJournalier(),
                 vehicule.getStatut(),
-                vehicule.getAgence().getIdAgence());
+                vehicule.getAgence().getIdAgence(),
+                vehicule.getEquipements().stream().map(Equipement::getIdEquipement).toList(),
+                vehicule.getMaintenances().stream().map(Maintenance::getIdMaintenance).toList());
     }
 
     public Vehicule toEntity(VehiculeDTO dto) {

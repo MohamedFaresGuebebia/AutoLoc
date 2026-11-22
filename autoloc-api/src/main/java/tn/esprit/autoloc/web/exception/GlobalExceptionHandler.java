@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import tn.esprit.autoloc.exception.BusinessException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,5 +56,10 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ApiError> build(HttpStatus status, String message, List<String> details) {
         ApiError body = new ApiError(LocalDateTime.now(), status.value(), status.getReasonPhrase(), message, details);
         return ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ApiError> handleBusiness(BusinessException ex) {
+        return build(HttpStatus.BAD_REQUEST, ex.getMessage(), List.of());
     }
 }

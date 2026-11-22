@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import tn.esprit.autoloc.domain.CategorieVehicule;
 import tn.esprit.autoloc.domain.StatutVehicule;
+import java.util.List;
 
 import java.math.BigDecimal;
 
@@ -31,5 +32,7 @@ public record VehiculeDTO(
         StatutVehicule statut,
         @NotNull(message = "L'identifiant de l'agence est obligatoire")
         @Positive(message = "L'identifiant de l'agence doit être positif")
-        Long idAgence) {
+        Long idAgence,
+        List<Long> equipementIds,
+        List<Long> maintenanceIds) {
 }

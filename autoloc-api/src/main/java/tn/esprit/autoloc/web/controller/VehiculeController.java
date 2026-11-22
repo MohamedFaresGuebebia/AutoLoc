@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.autoloc.service.IVehiculeService;
 import tn.esprit.autoloc.web.dto.VehiculeDTO;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
@@ -73,5 +74,22 @@ public class VehiculeController {
     @DeleteMapping("/remove-vehicule/{idVehicule}")
     public void removeVehicule(@PathVariable("idVehicule") Long idVehicule) {
         vehiculeService.removeVehicule(idVehicule);
+    }
+
+    @Operation(summary = "Affecter un équipement à un véhicule",
+            description = "Rattache l'équipement au véhicule indiqué.")
+    @PutMapping("/affecter-equipement/{idVehicule}/{idEquipement}")
+    public VehiculeDTO affecterVehiculeAEquipement(@PathVariable("idVehicule") Long idVehicule,
+                                                   @PathVariable("idEquipement") Long idEquipement) {
+        return vehiculeService.affecterVehiculeAEquipement(idVehicule, idEquipement);
+    }
+
+    @Operation(summary = "Affecter une maintenance à un véhicule",
+            description = "Crée une maintenance du jour pour le véhicule identifié par son immatriculation.")
+    @PostMapping("/affecter-maintenance")
+    public VehiculeDTO affecterMaintenanceAvehicule(
+            @RequestParam("description") @NotBlank(message = "La description est obligatoire") String description,
+            @RequestParam("immatriculation") @NotBlank(message = "L'immatriculation est obligatoire") String immatriculation) {
+        return vehiculeService.affecterMaintenanceAvehicule(description, immatriculation);
     }
 }
